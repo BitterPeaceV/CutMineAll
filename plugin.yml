@@ -1,0 +1,8 @@
+name: CutMineAll
+main: bitterpeacev\cutmineall\CutMineAllPlugin
+version: 1.0.0
+api: [3.6.1]
+load: POSTWORLD
+author: BitterPeaceV
+description: Destroy tree or ore at once
+website: https://github.com/BitterPeaceV/CutMineAll
