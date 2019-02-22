@@ -6,30 +6,53 @@ use pocketmine\plugin\PluginBase;
 use pocketmine\event\Listener;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\scheduler\ClosureTask;
+use pocketmine\command\Command;
+use pocketmine\command\CommandSender;
+use pocketmine\Player;
 
 class CutMineAllPlugin extends PluginBase implements Listener
 {
     private $targets = [14, 15, 16, 17, 21, 56, 73, 74, 129, 153, 162];
-    public $searched = [];
+    private $searched = [];
+    private $switch = [];
     
     public function onEnable()
     {
         $this->getServer()->getPluginManager()->registerEvents($this, $this);
     }
 
+    public function onCommand(CommandSender $sender, Command $command, string $label, array $args): bool
+    {
+        if ($label === "cm-all") {
+            if (!isset($args[0])) return false;
+
+            if ($sender instanceof Player) {
+                $switch = $args[0] === "on" ? true : false;
+                $this->switch[$sender->getName()] = $switch;
+                $sender->sendMessage("一括破壊機能を{$args[0]}にしました");
+                return true;
+            }
+        }
+        return false;
+    }
+
     function onBlockBreak(BlockBreakEvent $event)
     {
         $block = $event->getBlock();
+        $player = $event->getPlayer();
+        $name = $player->getName();
+        $vector = $block->asVector3();
+        $item = $player->getInventory()->getItemInHand();
+
+        // プレイヤーが木こり機能をオフにしていればここで処理を終える
+        if (!isset($this->switch[$name]) || !$this->switch[$name]) {
+            return;
+        }
 
         // 木や鉱石でなければここで処理を終える
         if (!in_array($block->getId(), $this->targets, true)) {
             return;
         }
-
-        $player = $event->getPlayer();
-        $name = $player->getName();
-        $vector = $block->asVector3();
-        $item = $player->getInventory()->getItemInHand();
 
         // プレイヤーの探索済み座標リストが無ければ作る
         if (!isset($this->searched[$name])) {

@@ -6,3 +6,13 @@ load: POSTWORLD
 author: BitterPeaceV
 description: Destroy tree or ore at once
 website: https://github.com/BitterPeaceV/CutMineAll
+
+commands:
+  cm-all:
+    description: 一括破壊機能のオンオフ切り替え
+    usage: "/cm-all <on/off>"
+    permission: cmall.command.cm-all
+permissions:
+  cmall.command.cm-all:
+    default: true
+    description: "Allow switching of function on / off"
