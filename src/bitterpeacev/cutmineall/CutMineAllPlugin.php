@@ -36,6 +36,10 @@ class CutMineAllPlugin extends PluginBase implements Listener
         return false;
     }
 
+    /**
+     * @priority MONITOR
+     * @ignoreCancelled
+     */
     function onBlockBreak(BlockBreakEvent $event)
     {
         $block = $event->getBlock();
